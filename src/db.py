@@ -11,15 +11,16 @@ class DB:
                 id integer PRIMARY KEY ,
                 createdAt REAL,
                 selectedTest INTEGER,
-                name TEXT
+                userName TEXT
             )
         """,
         'createTestsTableSql' : """
             CREATE TABLE IF NOT EXISTS tests(
                 id integer PRIMARY KEY ,
                 name TEXT NOT NULL,
+                content TEXT NOT NULL,
                 createdAt REAL,
-                userId integer
+                updatedAt REAL
             )
         """,
         'createTestsResultsTableSql' : """
@@ -63,20 +64,39 @@ class DB:
 
     def populateInfo(self, name):
         c = self.conn.cursor()
-        #q = "insert into info ('createdAt', 'name') VALUES ({},'{}')".format(time(), name)
-        q = "INSERT INTO info (name) VALUES (?)"
-        print('q is {}'.format(q))
-        res = c.execute(q, [name])
+        q = "INSERT INTO info (userName, createdAt) VALUES (?, ?)"
+        secTime = time()
+        res = c.execute(q, [name, secTime])
+        id = c.lastrowid
         self.conn.commit()
-        print('res is {}'.format(res))
+        return id
 
+    def addTest(self, testName, testString ):
+        c = self.conn.cursor()
+        q = "INSERT INTO tests (name, content, createdAt) VALUES (?, ?, ?)"
+        vals = (testName, testString, time())
+        res = c.execute(q, vals)
+        id = c.lastrowid
+        self.conn.commit()
+        return id
+
+    def updateTest(self, id, testName, testString ):
+        c = self.conn.cursor()
+        q = "UPDATE tests set name = ?, content = ?, updatedAt = ? where id = ?"
+        vals = (testName, testString, time(), id)
+        res = c.execute(q, vals)
+        id = c.lastrowid
+        self.conn.commit()
+        return id
 
 
 if __name__ == '__main__':
     db = DB()
-    #db.printSqlVer()
     db.dropAll()
-    
     db.createDb()
     db.populateInfo('ciccio')
+    db.addTest('primo test', ''' function() {
+      return 42
+    }''')
+    db.updateTest(1, 'primo test bis', 'come quando fuori piove')
 
