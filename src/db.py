@@ -33,8 +33,8 @@ class DB:
         """
     }
 
-    def __init__(self):
-        db_name = 'trainer.db'
+    def __init__(self, config={}):
+        db_name = 'trainer.db' if not 'db' in config else config['db']
         self.db_name = db_name
         self.conn = sqlite3.connect(db_name)
 
@@ -89,14 +89,25 @@ class DB:
         self.conn.commit()
         return id
 
+    def getInfo(self):
+        c = self.conn.cursor()
+        q = "select * from info"
+        res = c.execute(q)
+        userTup = res.fetchone()
+        userProps = ['id', 'createdAt', 'selectedTest', 'name']
+        user = {x[1]: userTup[x[0]] for x in enumerate(userProps)}
+        return user
+
+
 
 if __name__ == '__main__':
     db = DB()
-    db.dropAll()
-    db.createDb()
-    db.populateInfo('ciccio')
-    db.addTest('primo test', ''' function() {
-      return 42
-    }''')
-    db.updateTest(1, 'primo test bis', 'come quando fuori piove')
+    #db.dropAll()
+    #db.createDb()
+    #db.populateInfo('ciccio')
+    #db.addTest('primo test', ''' function() {
+    #  return 42
+    #}''')
+    #db.updateTest(1, 'primo test bis', 'come quando fuori piove')
+    db.getInfo()
 
