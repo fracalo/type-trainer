@@ -110,12 +110,12 @@ class DB:
         ''' 
 
         if userName!= '':
-            print ('USERNAME {}'.format(userName))
             q = q + 'where userName = "{}"'.format(userName)
 
         res = c.execute(q)
         userTup = res.fetchone()
-        info = Info(id = userTup[0], name = userTup[1], createdAt = userTup[2], selectedTest = userTup[3])
+        info = Info(id = userTup[0], name = userTup[1], createdAt = userTup[2],
+                selectedTest = userTup[3], testName=userTup[4], testContent=userTup[5])
         return info
 
     def updateUserInfo(s, userName, updateDic):

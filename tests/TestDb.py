@@ -28,6 +28,7 @@ class MyTest(unittest.TestCase):
         s.assertEqual(info.name, 'Jane')
         createdAtDiff= time() - info.createdAt
         s.assertTrue(createdAtDiff < 2000)
+        s.assertEqual(info.testName, None)
 
     def test_adding_updating_the_first_text(s):
         txt='''
@@ -59,6 +60,7 @@ class MyTest(unittest.TestCase):
         id = s.db.addTest('jane test', 'I can t write abracadabra')
         info = s.db.updateUserInfo('Jane', {'selectedTest': id})
         s.assertEqual(info.selectedTest, id)
+        s.assertEqual(info.testContent, 'I can t write abracadabra')
 
         
 
