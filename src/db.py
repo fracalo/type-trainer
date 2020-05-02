@@ -1,6 +1,7 @@
 
 import sqlite3
 from time import time
+from .model.Info import Info
 
 
 class DB:
@@ -24,90 +25,109 @@ class DB:
             )
         """,
         'createTestsResultsTableSql' : """
-            CREATE TABLE IF NOT EXISTS testsResults(
+            CREATE TABLE IF NOT EXISTS testsResult(
                 id integer PRIMARY KEY ,
                 startedAt REAL,
-                finishedAt REAL
+                finishedAt REAL,
                 testId INTEGER
             )
         """
     }
 
-    def __init__(self, config={}):
+    def __init__(s, config={}):
         db_name = 'trainer.db' if not 'db' in config else config['db']
-        self.db_name = db_name
-        self.conn = sqlite3.connect(db_name)
+        s.db_name = db_name
+        s.conn = sqlite3.connect(db_name)
 
-    def resetConn(self):
-        self.conn.close()
-        self.conn = sqlite3.connect(self.db_name)
+    def resetConn(s):
+        s.conn.close()
+        s.conn = sqlite3.connect(s.db_name)
 
-    def dropAll(self):
-        c = self.conn.cursor()
-        table_names = self.getTables()
+    def dropAll(s):
+        c = s.conn.cursor()
+        table_names = s.getTables()
         for t in table_names:
             #if t == 'sqlite_sequence': continue
             q = "drop table '{}'".format(t)
-            print(q)
             c.execute(q)
 
-    def getTables(self):
-        c = self.conn.cursor()
+    def getTables(s):
+        c = s.conn.cursor()
         table_names = c.execute("select name from sqlite_master where type = 'table'").fetchall()
         return [x[0] for x in table_names]
 
 
-    def createDb(self):
-        for k, v in self.createQueries.items():
-            print('executing {}'.format(k))
-            self.conn.execute(v)
+    def createDb(s):
+        for k, v in s.createQueries.items():
+            s.conn.execute(v)
 
-    def populateInfo(self, name):
-        c = self.conn.cursor()
+    def populateInfo(s, name):
+        c = s.conn.cursor()
         q = "INSERT INTO info (userName, createdAt) VALUES (?, ?)"
         secTime = time()
         res = c.execute(q, [name, secTime])
         id = c.lastrowid
-        self.conn.commit()
+        s.conn.commit()
         return id
 
-    def addTest(self, testName, testString ):
-        c = self.conn.cursor()
+    def addTest(s, testName, testString ):
+        c = s.conn.cursor()
         q = "INSERT INTO tests (name, content, createdAt) VALUES (?, ?, ?)"
         vals = (testName, testString, time())
         res = c.execute(q, vals)
         id = c.lastrowid
-        self.conn.commit()
+        s.conn.commit()
         return id
 
-    def updateTest(self, id, testName, testString ):
-        c = self.conn.cursor()
+    def updateTest(s, id, testName, testString ):
+        c = s.conn.cursor()
         q = "UPDATE tests set name = ?, content = ?, updatedAt = ? where id = ?"
         vals = (testName, testString, time(), id)
         res = c.execute(q, vals)
         id = c.lastrowid
-        self.conn.commit()
+        s.conn.commit()
         return id
 
-    def getInfo(self):
-        c = self.conn.cursor()
-        q = "select * from info"
+    def insertTestResult(s, testId, startedAt, finishedAt):
+        c = s.conn.cursor()
+        q = "insert into testsResult (testId, startedAt, finishedAt) values (?, ?, ?)"
+        res = c.execute(q, (testId, startedAt, finishedAt))
+        s.conn.commit()
+
+
+    def getTestsWithRecords(s):
+        c = s.conn.cursor()
+        q = '''select M.id, M.name, M.content, M.createdAt, M.updatedAt, T.id, T.startedAt, T.finishedAt
+            from tests M inner join testsResult T on M.id=T.testId '''
+        cur = c.execute(q)
+        res = cur.fetchall()
+
+
+    def getInfo(s, userName=''):
+        c = s.conn.cursor()
+        q = '''select M.id, M.userName, M.createdAt, M.selectedTest, T.name, T.content from info M
+            left join tests T on M.selectedTest = T.id
+        ''' 
+
+        if userName!= '':
+            print ('USERNAME {}'.format(userName))
+            q = q + 'where userName = "{}"'.format(userName)
+
         res = c.execute(q)
         userTup = res.fetchone()
-        userProps = ['id', 'createdAt', 'selectedTest', 'name']
-        user = {x[1]: userTup[x[0]] for x in enumerate(userProps)}
-        return user
+        info = Info(id = userTup[0], name = userTup[1], createdAt = userTup[2], selectedTest = userTup[3])
+        return info
+
+    def updateUserInfo(s, userName, updateDic):
+        c = s.conn.cursor()
+        setString = ','.join([ str(k) + '=' + str(v) for k, v in updateDic.items()])
+        q = 'update info set {} where userName = "{}"'.format(setString,  userName)
+        res = c.execute(q)
+        return s.getInfo(userName)
 
 
 
-if __name__ == '__main__':
-    db = DB()
-    #db.dropAll()
-    #db.createDb()
-    #db.populateInfo('ciccio')
-    #db.addTest('primo test', ''' function() {
-    #  return 42
-    #}''')
-    #db.updateTest(1, 'primo test bis', 'come quando fuori piove')
-    db.getInfo()
+
+#if __name__ == '__main__':
+#    db = DB()
 
