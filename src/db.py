@@ -91,6 +91,10 @@ class DB:
     def insertTestResult(s, testId, startedAt, finishedAt):
         c = s.conn.cursor()
         q = "insert into testsResult (testId, startedAt, finishedAt) values (?, ?, ?)"
+        print("query is {}".format(q))
+        print("testId is {}".format(testId))
+        print("startedAt is {}".format(startedAt))
+        print("finishedAt is {}".format(finishedAt))
         res = c.execute(q, (testId, startedAt, finishedAt))
         s.conn.commit()
 

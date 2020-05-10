@@ -7,7 +7,7 @@ from time import time
 tempDir = tempfile.gettempdir()
 dbPath = tempDir + '/test_db_trainer.db'
 
-class MyTest(unittest.TestCase):
+class TestDb(unittest.TestCase):
 
     def setUp(s): 
         if os.path.isfile(dbPath):
