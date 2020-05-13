@@ -91,12 +91,11 @@ class DB:
     def insertTestResult(s, testId, startedAt, finishedAt):
         c = s.conn.cursor()
         q = "insert into testsResult (testId, startedAt, finishedAt) values (?, ?, ?)"
-        print("query is {}".format(q))
-        print("testId is {}".format(testId))
-        print("startedAt is {}".format(startedAt))
-        print("finishedAt is {}".format(finishedAt))
         res = c.execute(q, (testId, startedAt, finishedAt))
+        id = c.lastrowid
         s.conn.commit()
+        return id
+        
 
 
     def getTestsWithRecords(s):
@@ -129,9 +128,18 @@ class DB:
         res = c.execute(q)
         return s.getInfo(userName)
 
+    def getResultPosition(s, id, testId):
+        c = s.conn.cursor()
+        q = '''select row_number () over ( order by (M.finishedAt - M.startedAt)) rowNumber, (M.finishedAt - M.startedAt) as duration, M.id, M.startedAt,  T.name
+        from testsResult M join tests T on T.id = M.testId
+        where M.testId = {} '''.format(testId)
+
+        res = c.execute(q)
+        arr = c.fetchall()
+
+        for i, item in enumerate(arr):
+            if item[2] == id:
+                return i + 1
 
 
-
-#if __name__ == '__main__':
-#    db = DB()
 

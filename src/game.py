@@ -3,7 +3,7 @@ import re
 from time import time 
 from src.db import DB 
 
-def game(db):
+def game(db, ctx_input=input):
     info = db.getInfo()
     text = info.testContent
     
@@ -13,10 +13,10 @@ def game(db):
 
         "{}"
     """.format(info.name, text))
-    _ = input("When you press ENTER the game will start")
+    _ = ctx_input("When you press ENTER the game will start")
 
     startTime = getMillis()
-    txt = input("GOOOOO !!!\n\n")
+    txt = ctx_input("GOOOOO !!!\n\n")
 
     if (txt != text):
         print("you loose")
@@ -26,11 +26,11 @@ def game(db):
     diff = endTime - startTime
     print("You completed the test in {} seconds".format(diff))
     print ("selected test is {}".format(info.selectedTest))
-    db.insertTestResult(info.selectedTest, startTime, endTime)
-    print ('inserted..')
-    print ('start is.. {}'.format(startTime))
-    print ('endTime is.. {}'.format(endTime))
+    id = db.insertTestResult(info.selectedTest, startTime, endTime)
+    #db.getResultPosition(id, info.selectedTest)
 
+
+    
 
 
 
