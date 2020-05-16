@@ -98,12 +98,12 @@ class DB:
         
 
 
-    def getTestsWithRecords(s):
-        c = s.conn.cursor()
-        q = '''select M.id, M.name, M.content, M.createdAt, M.updatedAt, T.id, T.startedAt, T.finishedAt
-            from tests M inner join testsResult T on M.id=T.testId '''
-        cur = c.execute(q)
-        res = cur.fetchall()
+    #def getTestsWithRecords(s):
+    #    c = s.conn.cursor()
+    #    q = '''select M.id, M.name, M.content, M.createdAt, M.updatedAt, T.id, T.startedAt, T.finishedAt
+    #        from tests M inner join testsResult T on M.id=T.testId '''
+    #    cur = c.execute(q)
+    #    res = cur.fetchall()
 
 
     def getInfo(s, userName=''):
@@ -141,5 +141,25 @@ class DB:
             if item[2] == id:
                 return i + 1
 
+
+    def getAllTests(s):
+        c = s.conn.cursor()
+        q = 'select id, name, content from tests'
+        res = c.execute(q)
+        arr = c.fetchall()
+        return [{'id': x[0], 'name': x[1], 'content': x[2]} for x in arr]
+
+    def deleteTest(s, id):
+        c = s.conn.cursor()
+        q = 'delete from tests where id = {}'.format(id)
+        res = c.execute(q)
+        s.conn.commit()
+
+    def getTestResult(s, id):
+        c = s.conn.cursor()
+        q = 'select id, startedAt, (finishedAt - startedAt) as duration where testId = {}'.format(id)
+        res = c.execute(q)
+        arr = c.fetchall()
+        return [{'startedAt': x[1], 'duration': x[2]} for x in arr]
 
 

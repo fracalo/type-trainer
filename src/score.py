@@ -1,12 +1,23 @@
-import sqlite3
+import inquirer
 
 db_name = 'trainer.db'
 
-# in case the connection fails we should display an error prompting the user to run setup
-conn = sqlite3.connect(db_name)
 
-def getRecords():
-    print('thats the score')
+def getRecords(db):
+    tests = db.getAllTests()
+
+    questions = [
+        inquirer.List(
+            "deleteTest",
+            message="Remove a test from the list",
+            choices=tests
+        )
+    ]
+
+    answer = inquirer.prompt(questions)
+    id = answer['deleteTest']['id']
+
+    testsResultsForId = db.getTestResult(id)
 
 
 

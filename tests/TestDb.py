@@ -17,11 +17,6 @@ class TestDb(unittest.TestCase):
         s.db = DB({'db': dbPath})
         s.db.createDb()
 
-    #@classmethod
-    #def tearDownClass(cls): 
-    #    os.remove(dbPath)
-
-
     def test_creation_of_name_for_jane(s):
         s.db.populateInfo('Jane')
         info = s.db.getInfo()
@@ -45,15 +40,14 @@ class TestDb(unittest.TestCase):
         '''
         id = s.db.addTest('jane second test', txt)
         s.assertEqual(id, 2)
-        
 
 
-    def test_getting_some_records_back(s):
-        s.db.populateInfo('Jane')
-        id = s.db.addTest('jane test', 'I can t write abracadabra')
-        t = time()
-        s.db.insertTestResult(1, t - 10000, t)
-        recordTable = s.db.getTestsWithRecords()
+    #def test_getting_some_records_back(s):
+    #    s.db.populateInfo('Jane')
+    #    id = s.db.addTest('jane test', 'I can t write abracadabra')
+    #    t = time()
+    #    s.db.insertTestResult(1, t - 10000, t)
+    #    recordTable = s.db.getTestsWithRecords()
 
     def test_using_getInfo_we_also_get_current_test(s):
         s.db.populateInfo('Jane')

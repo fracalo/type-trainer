@@ -1,8 +1,9 @@
 import argparse
 import tempfile
-from .game import play
+from .game import game
 from .score import getRecords 
 from .db import DB
+from .testConfig import setTest, createTest, deleteTest, showTests, chooseTest
 
 ##########################################################
 # in main we parse all the arguments and decide what to do
@@ -25,12 +26,17 @@ parser.add_argument(
 
 args = parser.parse_args()
 
-def nothingConfigured() :
+def nothingConfigured(*x) :
     print('you got nothing configured')
 
 mainLogic = {
         'score': getRecords,
-        'play': play,
+        'play': game,
+        'setTest': setTest,
+        'createTest': createTest,
+        'chooseTest': chooseTest,
+        'deleteTest': deleteTest,
+        'showTests': showTests,
         None: nothingConfigured
     }
 
