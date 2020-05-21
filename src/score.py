@@ -1,23 +1,19 @@
 import inquirer
+import datetime
 
 db_name = 'trainer.db'
 
 
-def getRecords(db):
-    tests = db.getAllTests()
+def getScoreboardForCurrentTest(db):
+    info = db.getInfo()
 
-    questions = [
-        inquirer.List(
-            "deleteTest",
-            message="Remove a test from the list",
-            choices=tests
-        )
-    ]
+    results = db.getTestResult(info.selectedTest)
+    for result in results:
+        d = datetime.datetime.fromtimestamp(result['startedAt'])
+        formattedTime = d.strftime('%Y-%m-%d %H:%M:%S')
 
-    answer = inquirer.prompt(questions)
-    id = answer['deleteTest']['id']
+        print('{} - {}'.format(formattedTime, result['duration']))
 
-    testsResultsForId = db.getTestResult(id)
 
 
 

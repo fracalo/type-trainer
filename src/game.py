@@ -25,9 +25,11 @@ def game(db, ctx_input=input):
     endTime = getMillis()
     diff = endTime - startTime
     print("You completed the test in {} seconds".format(diff))
-    print ("selected test is {}".format(info.selectedTest))
     id = db.insertTestResult(info.selectedTest, startTime, endTime)
-    #db.getResultPosition(id, info.selectedTest)
+    position = db.getResultPosition(id, info.selectedTest)
+
+    print("This test is positioned {}".format(position))
+
 
 
     

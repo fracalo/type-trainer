@@ -1,18 +1,5 @@
 import inquirer
 
-def setTest(db, ctx_input=input):
-    info = db.getInfo()
-
-    questions = [
-        inquirer.List(
-            "testName",
-            message="Chose a test",
-            choices=['function', 'multiple return']
-        )
-    ]
-
-    answer = inquirer.prompt(questions)
-    print ('the answer is {}'.format( answer))
    
 
 def createTest(db):
@@ -21,7 +8,8 @@ def createTest(db):
     print('you inserted\n')
     print(testString)
     name = input('\nTo confirm add the name otherwise ctrl C to cancel.\n')
-    db.addTest(name, testString)
+    id = db.addTest(name, testString)
+    return id
     
 
 def deleteTest(db):
@@ -55,8 +43,7 @@ def chooseTest(db):
 
     answer = inquirer.prompt(questions)
     id = answer['test']['id']
-    print(info.name )
-    print(id)
+    print('{} chose test {}'.format(info.name, id))
 
 
     db.updateUserInfo(info.name, {'selectedTest': id})
@@ -65,7 +52,8 @@ def chooseTest(db):
      
 def showTests(db):
     tests = db.getAllTests()
-    print (tests)
+    for  test in tests:
+        print('{} - {} - {}'.format(test['id'], test['name'], test['content']))
 
     
 

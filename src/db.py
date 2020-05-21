@@ -126,6 +126,7 @@ class DB:
         setString = ','.join([ str(k) + '=' + str(v) for k, v in updateDic.items()])
         q = 'update info set {} where userName = "{}"'.format(setString,  userName)
         res = c.execute(q)
+        s.conn.commit()
         return s.getInfo(userName)
 
     def getResultPosition(s, id, testId):
@@ -157,7 +158,7 @@ class DB:
 
     def getTestResult(s, id):
         c = s.conn.cursor()
-        q = 'select id, startedAt, (finishedAt - startedAt) as duration where testId = {}'.format(id)
+        q = 'select id, startedAt, (finishedAt - startedAt) as duration from testsResult where testId = {}'.format(id)
         res = c.execute(q)
         arr = c.fetchall()
         return [{'startedAt': x[1], 'duration': x[2]} for x in arr]
