@@ -1,6 +1,7 @@
 import subprocess
 from time import sleep
 from .testConfig import createTest
+from .utils import yOrN, printHeader
 
 def config(db, ctx_input=input):
     printHeader()
@@ -19,16 +20,6 @@ def config(db, ctx_input=input):
 
 
 
-    #doReset = input("If you continue the db in use will be reset, do you want to proceed?")
 
 
 
-def printHeader ():
-    c = 'figlet Type Trainer'
-    process = subprocess.Popen(c.split())
-
-def yOrN(q):
-    answer = ''
-    while answer[:1].lower() != 'y' and answer[:1].lower() != 'n':
-        answer = input(q) 
-    return answer == 'y'

@@ -5,6 +5,7 @@ from .score import getScoreboardForCurrentTest
 from .setUp import config
 from .db import DB
 from .testConfig import createTest, deleteTest, showTests, chooseTest
+from .gameplay import Narrative
 
 ##########################################################
 # in main we parse all the arguments and decide what to do
@@ -27,8 +28,6 @@ parser.add_argument(
 
 args = parser.parse_args()
 
-def nothingConfigured(*x) :
-    print('you got nothing configured')
 
 mainLogic = {
         'score': getScoreboardForCurrentTest,
@@ -38,7 +37,7 @@ mainLogic = {
         'deleteTest': deleteTest,
         'showTests': showTests,
         'config': config,
-        None: nothingConfigured
+        None: Narrative
     }
 
 tempDir = tempfile.gettempdir()

@@ -12,7 +12,8 @@ class DB:
                 id integer PRIMARY KEY ,
                 createdAt REAL,
                 selectedTest INTEGER,
-                userName TEXT
+                userName TEXT,
+                userMail TEXT
             )
         """,
         'createTestsTableSql' : """
@@ -61,11 +62,11 @@ class DB:
         for k, v in s.createQueries.items():
             s.conn.execute(v)
 
-    def populateInfo(s, name):
+    def populateInfo(s, name, mail = ''):
         c = s.conn.cursor()
-        q = "INSERT INTO info (userName, createdAt) VALUES (?, ?)"
+        q = "INSERT INTO info (userName, createdAt, userMail) VALUES (?, ?, ?)"
         secTime = time()
-        res = c.execute(q, [name, secTime])
+        res = c.execute(q, [name, secTime, mail])
         id = c.lastrowid
         s.conn.commit()
         return id
@@ -106,20 +107,39 @@ class DB:
     #    res = cur.fetchall()
 
 
-    def getInfo(s, userName=''):
+    def getInfo(s, userName='', mail=''):
         c = s.conn.cursor()
-        q = '''select M.id, M.userName, M.createdAt, M.selectedTest, T.name, T.content from info M
+        q = '''select M.id, M.userName, M.userMail, M.createdAt, M.selectedTest,T.name, T.content from info M
             left join tests T on M.selectedTest = T.id
         ''' 
 
         if userName!= '':
-            q = q + 'where userName = "{}"'.format(userName)
+            q = q + 'where M.userName = "{}"'.format(userName)
+        if userName != '' and mail!= '':
+            q = q + ' and M.userMail = "{}"'.format(userName)
+
 
         res = c.execute(q)
         userTup = res.fetchone()
-        info = Info(id = userTup[0], name = userTup[1], createdAt = userTup[2],
-                selectedTest = userTup[3], testName=userTup[4], testContent=userTup[5])
+
+        if userTup == None:
+            return None
+        
+        info = Info(id = userTup[0], name = userTup[1], mail = userTup[2], createdAt = userTup[3],
+                selectedTest = userTup[4], testName=userTup[5], testContent=userTup[6])
         return info
+
+    def getAllUsers(s):
+        c = s.conn.cursor()
+        q = '''select M.id, M.userName, M.userMail, M.createdAt, M.selectedTest, T.name, T.content from info M
+            left join tests T on M.selectedTest = T.id
+        ''' 
+        res = c.execute(q)
+        usersTup = res.fetchall()
+
+        users = [Info(id = userTup[0], name = userTup[1], mail= userTup[2], createdAt = userTup[3],
+                selectedTest = userTup[4], testName=userTup[5], testContent=userTup[6]) for userTup in usersTup]
+        return users
 
     def updateUserInfo(s, userName, updateDic):
         c = s.conn.cursor()
