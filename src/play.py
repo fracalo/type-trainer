@@ -16,7 +16,6 @@ class Play():
         print ("content:")
         print (s.selectedTest['content'])
         _ = s.ctx_input("When you press ENTER the game will start")
-        #_ = input("When you press ENTER the game will start")
         s.start()
 
 
@@ -26,7 +25,7 @@ class Play():
         txt = s.ctx_input("GOOOOO !!!\n\n")
 
         if (txt != s.selectedTest['content']):
-            print("you loose")
+            print("You loose...")
             return
             
         endTime = getMillis()
@@ -36,6 +35,9 @@ class Play():
         position = s.db.getResultPosition(id, s.selectedTest['id'])
 
         print("This test is positioned {}".format(position))
+        s.id = id
+        s.position = position
+
 
 
 

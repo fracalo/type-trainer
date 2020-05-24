@@ -46,6 +46,5 @@ def clearConsole():
     #print(chr(27) + "[2J")
     print("\033c", end="")
 
-
 def getMillis():
     return float('%.3f'%(time()))

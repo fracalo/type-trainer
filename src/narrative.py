@@ -2,6 +2,7 @@ from .utils import printHeader, lowerSnake, yOrN, checkDbCreated, toMap, clearCo
 import inquirer
 import sqlite3
 from .play import Play 
+from .score import Scoreboard
 
 
 class Narrative():
@@ -171,6 +172,9 @@ class Narrative():
 
     def play(s):
         p = Play(s.db, s.selectedUser, s.selectedTest)
+        score = Scoreboard(s.db, s.selectedUser, s.selectedTest, testId=p.id)
+        print('Game over')
+        
 
 
     

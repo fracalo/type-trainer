@@ -198,10 +198,10 @@ class DB:
 
     def getTestResult(s, id):
         c = s.conn.cursor()
-        q = 'select id, startedAt, (finishedAt - startedAt) as duration from testsResult where testId = {}'.format(id)
+        q = 'select id, startedAt, (finishedAt - startedAt) as duration from testsResult where testId = {} order by (finishedAt - startedAt) '.format(id)
         res = c.execute(q)
         arr = c.fetchall()
-        return [{'startedAt': x[1], 'duration': x[2]} for x in arr]
+        return [{'id': x[0], 'startedAt': x[1], 'duration': x[2]} for x in arr]
 
     def getTests(s, name, txt):
         c = s.conn.cursor()
