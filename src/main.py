@@ -5,7 +5,7 @@ from .score import getScoreboardForCurrentTest
 from .setUp import config
 from .db import DB
 from .testConfig import createTest, deleteTest, showTests, chooseTest
-from .gameplay import Narrative
+from .narrative import Narrative
 
 ##########################################################
 # in main we parse all the arguments and decide what to do

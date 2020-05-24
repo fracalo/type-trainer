@@ -1,9 +1,11 @@
 import subprocess
+from time import time 
 import re
 import sqlite3
 from time import sleep
 
 def printHeader ():
+    sleep(.1)
     c = 'figlet Type Trainer'
     process = subprocess.Popen(c.split())
     sleep(.1)
@@ -40,3 +42,10 @@ lowerSnake = lambda s: s.lower().replace(' ', '_')
 def toMap(keyFunc, arr):
     return { keyFunc(x): x for x in arr}
 
+def clearConsole():
+    #print(chr(27) + "[2J")
+    print("\033c", end="")
+
+
+def getMillis():
+    return float('%.3f'%(time()))

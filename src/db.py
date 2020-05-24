@@ -2,6 +2,7 @@
 import sqlite3
 from time import time
 from .model.Info import Info
+from .model.User import User
 
 
 class DB:
@@ -21,8 +22,7 @@ class DB:
                 id integer PRIMARY KEY ,
                 name TEXT NOT NULL,
                 content TEXT NOT NULL,
-                createdAt REAL,
-                updatedAt REAL
+                createdAt REAL
             )
         """,
         'createTestsResultsTableSql' : """
@@ -125,20 +125,30 @@ class DB:
         if userTup == None:
             return None
         
-        info = Info(id = userTup[0], name = userTup[1], mail = userTup[2], createdAt = userTup[3],
-                selectedTest = userTup[4], testName=userTup[5], testContent=userTup[6])
+        info = User(id = userTup[0], name = userTup[1], mail = userTup[2], createdAt = userTup[3],
+                selectedTest = userTup[4])
         return info
+
+    #def getAllUsers(s):
+    #    c = s.conn.cursor()
+    #    q = '''select M.id, M.userName, M.userMail, M.createdAt, M.selectedTest, T.name, T.content from info M
+    #        left join tests T on M.selectedTest = T.id
+    #    ''' 
+    #    res = c.execute(q)
+    #    usersTup = res.fetchall()
+
+    #    users = [Info(id = userTup[0], name = userTup[1], mail= userTup[2], createdAt = userTup[3],
+    #            selectedTest = userTup[4], testName=userTup[5], testContent=userTup[6]) for userTup in usersTup]
+    #    return users
 
     def getAllUsers(s):
         c = s.conn.cursor()
-        q = '''select M.id, M.userName, M.userMail, M.createdAt, M.selectedTest, T.name, T.content from info M
-            left join tests T on M.selectedTest = T.id
-        ''' 
+        q = 'select id, userName, userMail, createdAt, selectedTest from info' 
         res = c.execute(q)
         usersTup = res.fetchall()
 
-        users = [Info(id = userTup[0], name = userTup[1], mail= userTup[2], createdAt = userTup[3],
-                selectedTest = userTup[4], testName=userTup[5], testContent=userTup[6]) for userTup in usersTup]
+        users = [User(id = userTup[0], name = userTup[1], mail= userTup[2], createdAt = userTup[3],
+                selectedTest = userTup[4]) for userTup in usersTup]
         return users
 
     def updateUserInfo(s, userName, updateDic):
@@ -148,6 +158,14 @@ class DB:
         res = c.execute(q)
         s.conn.commit()
         return s.getInfo(userName)
+
+    def updateUserInfoById(s, id, updateDic):
+        c = s.conn.cursor()
+        setString = ','.join([ str(k) + '=' + str(v) for k, v in updateDic.items()])
+        q = 'update info set {} where id = "{}"'.format(setString,  id)
+        res = c.execute(q)
+        s.conn.commit()
+        return id 
 
     def getResultPosition(s, id, testId):
         c = s.conn.cursor()
@@ -173,7 +191,9 @@ class DB:
     def deleteTest(s, id):
         c = s.conn.cursor()
         q = 'delete from tests where id = {}'.format(id)
+        q2 = 'update info set selectedTest = null where selectedTest = {}'.format(id)
         res = c.execute(q)
+        res2 = c.execute(q2)
         s.conn.commit()
 
     def getTestResult(s, id):
@@ -182,5 +202,20 @@ class DB:
         res = c.execute(q)
         arr = c.fetchall()
         return [{'startedAt': x[1], 'duration': x[2]} for x in arr]
+
+    def getTests(s, name, txt):
+        c = s.conn.cursor()
+        q = 'select id, name, content from tests where name = "{}" and content = "{}"'.format(name, txt)
+        res = c.execute(q)
+        arr = c.fetchall()
+        return [{'id': x[0], 'name': x[1], 'content': x[2]} for x in arr]
+
+    def getTestById(s, id):
+        c = s.conn.cursor()
+        q = 'select id, name, content from tests where id = "{}"'.format(id)
+        res = c.execute(q)
+        x = c.fetchone()
+        return {'id': x[0], 'name': x[1], 'content': x[2]}
+
 
 

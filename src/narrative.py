@@ -1,7 +1,7 @@
 from .utils import printHeader, lowerSnake, yOrN, checkDbCreated, toMap, clearConsole
 import inquirer
 import sqlite3
-from play import Play 
+from .play import Play 
 
 
 class Narrative():
@@ -170,7 +170,7 @@ class Narrative():
         s.welcome()
 
     def play(s):
-        print('playyyyyyyyyyyyyyyyyyy')
+        p = Play(s.db, s.selectedUser, s.selectedTest)
 
 
     
