@@ -1,2 +1,8 @@
+blessings==1.7
 docutils==0.16
+inquirer==2.6.3
+printy==2.0.1
+python-editor==1.0.4
+readchar==2.0.1
 robotframework==3.1.2
+six==1.14.0
