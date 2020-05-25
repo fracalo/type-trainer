@@ -172,7 +172,7 @@ class Narrative():
         s.welcome()
 
     def play(s):
-        p = Play(s.db, s.selectedUser, s.selectedTest)
+        p = Play(s.db, s.selectedUser, s.selectedTest, ctx_input= multilineInput)
         if hasattr(p, 'id'):
             score = Scoreboard(s.db, s.selectedUser, s.selectedTest, testId=p.id)
 

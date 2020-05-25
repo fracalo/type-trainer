@@ -1,7 +1,7 @@
 import inquirer
 import datetime
 from printy import printy
-from .utils import getMillis
+from .utils import getMillis, getWordsMin
 
 
 class Scoreboard():
@@ -19,9 +19,14 @@ class Scoreboard():
             d = datetime.datetime.fromtimestamp(result['startedAt'])
             formattedTime = d.strftime('%Y-%m-%d %H:%M:%S')
             if s.testId and result['id'] == s.testId:
-                printy('=> {} - {} <='.format(formattedTime, '%.3f'%(result['duration'])), 'bm')
+                printy('=> {} - {}s'.format(formattedTime, '%.3f'%(result['duration'])), 'bm')
             else:
-                print('   {} - {} ({})'.format(formattedTime, '%.3f'%(result['duration']), result['userName']))
+                print('   {} - {}s - {} (words/min {})'.format(
+                    formattedTime,
+                    '%.3f'%(result['duration']),
+                    result['userName'],
+                    '%.2f'%(getWordsMin(result['duration'], s.selectedTest['content']))
+                ))
 
 
 

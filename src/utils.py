@@ -57,3 +57,6 @@ def multilineInput(q):
         line = input()
 
     return '\n'.join(acc)
+
+def getWordsMin(duration, test):
+    return (60 / duration) * (len(test) / 5)
