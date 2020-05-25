@@ -48,3 +48,12 @@ def clearConsole():
 def getMillis(t = None):
     t = t if t is not None else time()
     return float('%.3f'%(t))
+
+def multilineInput(q):
+    acc = []
+    line = input(q)
+    while line != '':
+        acc.append(line)
+        line = input()
+
+    return '\n'.join(acc)

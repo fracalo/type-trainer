@@ -1,6 +1,7 @@
 
 from time import time 
 from .utils import getMillis
+from printy import printy
 
 class Play():
     def __init__(s, db, selectedUser, selectedTest, ctx_input = input):
@@ -14,7 +15,7 @@ class Play():
     def intro(s):
         print ("selected test is => {}".format(s.selectedTest['name']))
         print ("content:")
-        print (s.selectedTest['content'])
+        printy (s.selectedTest['content'], '<o')
         _ = s.ctx_input("When you press ENTER the game will start")
         s.start()
 

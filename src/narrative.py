@@ -1,8 +1,9 @@
-from .utils import printHeader, lowerSnake, yOrN, checkDbCreated, toMap, clearConsole
+from .utils import printHeader, lowerSnake, yOrN, checkDbCreated, toMap, clearConsole, multilineInput
 import inquirer
 import sqlite3
 from .play import Play 
 from .score import Scoreboard
+from printy import printy
 
 
 class Narrative():
@@ -125,7 +126,7 @@ class Narrative():
             print('name field is required')
             name = input('name:')
 
-        text = input('text:')
+        text = multilineInput('text:')
 
         try:
             checkExistingTest = s.db.getTests(name, text)
@@ -137,7 +138,7 @@ class Narrative():
 
 
         s.db.addTest(name, text)
-        print('{} - test has been added correctly'.format(name))
+        printy('[rI]{}@- test has been added correctly'.format(name) )
         s.welcome()
 
     def _select_a_test(s):

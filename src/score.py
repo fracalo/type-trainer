@@ -3,9 +3,6 @@ import datetime
 from printy import printy
 from .utils import getMillis
 
-db_name = 'trainer.db'
-
-
 
 class Scoreboard():
     def __init__(s, db, selectedUser, selectedTest, testId = None):
@@ -22,9 +19,9 @@ class Scoreboard():
             d = datetime.datetime.fromtimestamp(result['startedAt'])
             formattedTime = d.strftime('%Y-%m-%d %H:%M:%S')
             if s.testId and result['id'] == s.testId:
-                printy('=> {} - {} <='.format(formattedTime, getMillis(result['duration'])), 'bm')
+                printy('=> {} - {} <='.format(formattedTime, '%.3f'%(result['duration'])), 'bm')
             else:
-                print('   {} - {} ({})'.format(formattedTime, getMillis(result['duration']), result['userName']))
+                print('   {} - {} ({})'.format(formattedTime, '%.3f'%(result['duration']), result['userName']))
 
 
 
