@@ -1,5 +1,7 @@
 import inquirer
 import datetime
+from printy import printy
+from .utils import getMillis
 
 db_name = 'trainer.db'
 
@@ -20,9 +22,9 @@ class Scoreboard():
             d = datetime.datetime.fromtimestamp(result['startedAt'])
             formattedTime = d.strftime('%Y-%m-%d %H:%M:%S')
             if s.testId and result['id'] == s.testId:
-                print('{} - {}'.format(formattedTime, result['duration']))
+                printy('=> {} - {} <='.format(formattedTime, getMillis(result['duration'])), 'bm')
             else:
-                print('{} - {}'.format(formattedTime, result['duration']))
+                print('   {} - {} ({})'.format(formattedTime, getMillis(result['duration']), result['userName']))
 
 
 

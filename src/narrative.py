@@ -34,7 +34,7 @@ class Narrative():
             choices.append('Delete a test')
 
         if s.selectedTest:
-            choices = ['Play'] + choices
+            choices = ['Play', 'Show scoreboard for selected test'] + choices
 
 
         question = [
@@ -172,8 +172,19 @@ class Narrative():
 
     def play(s):
         p = Play(s.db, s.selectedUser, s.selectedTest)
-        score = Scoreboard(s.db, s.selectedUser, s.selectedTest, testId=p.id)
-        print('Game over')
+        if hasattr(p, 'id'):
+            score = Scoreboard(s.db, s.selectedUser, s.selectedTest, testId=p.id)
+
+
+        retry = yOrN('Do you want to retry?[y/n]')
+        if retry:
+            s.play()
+        else: 
+            print('Game over')
+
+    def show_scoreboard_for_selected_test(s):
+        Scoreboard(s.db, s.selectedUser, s.selectedTest)
+
         
 
 

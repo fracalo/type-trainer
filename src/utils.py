@@ -31,7 +31,6 @@ the provided dbPath is {}
                     s.db.createDb()
                     #print('Resetting method')
                     return func(s)
-                    exit('asdf')
                 else:
                     exit('Exiting')
     return wrapper
@@ -46,5 +45,6 @@ def clearConsole():
     #print(chr(27) + "[2J")
     print("\033c", end="")
 
-def getMillis():
-    return float('%.3f'%(time()))
+def getMillis(t = None):
+    t = t if t is not None else time()
+    return float('%.3f'%(t))

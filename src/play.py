@@ -31,7 +31,7 @@ class Play():
         endTime = getMillis()
         diff = endTime - startTime
         print("You completed the test in {} seconds".format(diff))
-        id = s.db.insertTestResult(s.selectedTest['id'], startTime, endTime)
+        id = s.db.insertTestResult(s.selectedTest['id'], startTime, endTime, s.selectedUser.id)
         position = s.db.getResultPosition(id, s.selectedTest['id'])
 
         print("This test is positioned {}".format(position))

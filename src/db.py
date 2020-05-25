@@ -30,7 +30,8 @@ class DB:
                 id integer PRIMARY KEY ,
                 startedAt REAL,
                 finishedAt REAL,
-                testId INTEGER
+                testId INTEGER,
+                userId INTEGER
             )
         """
     }
@@ -89,10 +90,10 @@ class DB:
         s.conn.commit()
         return id
 
-    def insertTestResult(s, testId, startedAt, finishedAt):
+    def insertTestResult(s, testId, startedAt, finishedAt, userId):
         c = s.conn.cursor()
-        q = "insert into testsResult (testId, startedAt, finishedAt) values (?, ?, ?)"
-        res = c.execute(q, (testId, startedAt, finishedAt))
+        q = "insert into testsResult (testId, startedAt, finishedAt, userId) values (?, ?, ?, ?)"
+        res = c.execute(q, (testId, startedAt, finishedAt, userId))
         id = c.lastrowid
         s.conn.commit()
         return id
@@ -198,10 +199,10 @@ class DB:
 
     def getTestResult(s, id):
         c = s.conn.cursor()
-        q = 'select id, startedAt, (finishedAt - startedAt) as duration from testsResult where testId = {} order by (finishedAt - startedAt) '.format(id)
+        q = 'select M.id, M.startedAt, (M.finishedAt - M.startedAt) as duration, M.userId, T.userName from testsResult M inner join info T on M.userId = T.id where M.testId = {} order by (M.finishedAt - M.startedAt) '.format(id)
         res = c.execute(q)
         arr = c.fetchall()
-        return [{'id': x[0], 'startedAt': x[1], 'duration': x[2]} for x in arr]
+        return [{'id': x[0], 'startedAt': x[1], 'duration': x[2], 'userId': x[3], 'userName': x[4]} for x in arr]
 
     def getTests(s, name, txt):
         c = s.conn.cursor()
